@@ -1,0 +1,41 @@
+{
+  "name": "oracle",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test:alpaca": "node src/data/alpaca.js",
+    "test:insider": "node src/data/insider.js",
+    "test:signals": "node src/analysis/signals.js",
+    "scan": "node src/scan.js",
+    "paper": "node src/executor/paper.js",
+    "backtest": "node src/backtest/runner.js",
+    "backtest:crypto": "node src/backtest/crypto_runner.js",
+    "whale": "node src/data/whale.js",
+    "wallets": "node src/data/wallets.js",
+    "dex": "node src/data/dex.js",
+    "generate-wallet": "node src/wallet/generate.js",
+    "coinbase": "node src/data/coinbase.js",
+    "ledger": "node src/data/coinbase_ledger.js",
+    "cycle": "node src/data/cycle.js",
+    "dex-trade": "node src/executor/dex_executor.js --dry-run",
+    "dex-live": "node src/executor/dex_executor.js --live"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@alpacahq/alpaca-trade-api": "^3.1.3",
+    "@lifi/sdk": "^3.15.6",
+    "@polymarket/clob-client": "^5.2.3",
+    "@solana/web3.js": "^1.98.4",
+    "better-sqlite3": "^12.6.2",
+    "bip39": "^3.1.0",
+    "dotenv": "^17.3.1",
+    "ethers": "^6.16.0",
+    "jose": "^6.1.3",
+    "jsonwebtoken": "^9.0.3",
+    "technicalindicators": "^3.1.0"
+  }
+}

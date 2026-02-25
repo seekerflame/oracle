@@ -1,0 +1,27 @@
+# ═══════════════════════════════════════
+# SOVEREIGN — NEVER COMMIT THESE
+# ═══════════════════════════════════════
+.env
+*.key
+*.pem
+*.secret
+wallets.json
+data/keys/
+
+# Data (contains trade history & databases)
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+*.jsonl
