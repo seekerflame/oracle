@@ -1,7 +1,9 @@
 import fetch from 'node-fetch';
 import 'dotenv/config';
 import { ClobClient } from '@polymarket/clob-client';
-import { ethers } from 'ethers';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const ethers = require('ethers5');
 
 /**
  * Oracle Truth Machine — BTC Arbitrage Sentinel ⚖️
@@ -16,11 +18,11 @@ class BTCArbitrageSentinel {
         this.binanceUrl = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
         this.gammaUrl = 'https://gamma-api.polymarket.com/events?slug=bitcoin-above-on-march-10'; 
         
-        const provider = new ethers.JsonRpcProvider('https://polygon-rpc.com');
+        const provider = new ethers.providers.JsonRpcProvider('https://polygon-bor-rpc.publicnode.com', {
+            name: 'matic',
+            chainId: 137
+        });
         const wallet = new ethers.Wallet(process.env.ETH_PRIVATE_KEY, provider);
-        
-        // Ethers v6 compatibility patch for v5 libraries
-        wallet._signTypedData = wallet.signTypedData.bind(wallet);
         
         this.client = new ClobClient(
             'https://clob.polymarket.com',
@@ -47,11 +49,9 @@ class BTCArbitrageSentinel {
         const res = await fetch(this.gammaUrl);
         const data = await res.json();
         
-        // Gamma response is an array of events.Slug search returns the correct event at index 0.
         const event = data[0];
         if (!event || !event.markets) throw new Error('No markets found for this event');
 
-        // Extracting $70k strike specifically - check title or groupItemTitle
         const market = event.markets.find(m => m.groupItemTitle === '$70,000' || m.question.includes('$70,000'));
         if (!market) throw new Error('Strike $70,000 market not found');
 
@@ -80,7 +80,6 @@ class BTCArbitrageSentinel {
                 console.log(`🚀 ARBITRAGE SIGNAL: BTC is $${btcPrice} (> strike), but Yes is only ${(polyData.yesPrice * 100).toFixed(2)}%!`);
                 console.log(`💎 EDGE: ${diff.toFixed(2)}% potential gain on approach to expiry.`);
                 
-                // Autonomous Execution
                 await this.executeTrade(polyData.clobTokenId, polyData.yesPrice, "BUY");
             } else {
                 console.log('😴 EDGE: Signal below threshold. Standing by.');
@@ -93,16 +92,13 @@ class BTCArbitrageSentinel {
     async executeTrade(tokenId, price, side) {
         console.log(`💰 EXECUTING ${side} for ${tokenId} at ${price}...`);
         try {
-            // Ensure price is a string and formatted correctly for CLOB
             const roundedPrice = parseFloat(price).toFixed(2);
-            
             const order = await this.client.createOrder({
-                tokenID: tokenId,
-                price: roundedPrice,
+                tokenID: ethers.BigNumber.from(tokenId).toString(),
+                price: parseFloat(roundedPrice),
                 side: side,
-                size: 10 // Start with $10 clips as requested/confirmed
+                size: 10 
             });
-            
             console.log('   📡 Order created, posting to CLOB...');
             const result = await this.client.postOrder(order);
             console.log(`   ✅ Trade broadcasted: ${result.orderID}`);
@@ -112,7 +108,7 @@ class BTCArbitrageSentinel {
     }
 
     start() {
-        setInterval(() => this.monitor(), 30000); // 30s heartbeat
+        setInterval(() => this.monitor(), 30000);
         this.monitor();
     }
 }
