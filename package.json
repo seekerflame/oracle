@@ -25,6 +25,7 @@
     "truth:dry": "node src/truth_machine/scanner.js --once --dry-run",
     "truth:dash": "node src/truth_machine/dashboard.js",
     "truth:watch": "node src/truth_machine/dashboard.js --watch",
+    "start": "node src/vibecraft_relay.js & node src/truth_machine/dashboard.js",
     "whale:trace": "node src/whale/flow_mapper.js",
     "whale:cluster": "node src/whale/cluster.js",
     "whale:positions": "node src/whale/position_tracker.js",
