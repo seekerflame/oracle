@@ -16,6 +16,7 @@ import { InsiderTracker } from './data/insider.js';
 import { CongressTracker } from './data/congress.js';
 import { SignalEngine } from './analysis/signals.js';
 import { RiskManager } from './risk/manager.js';
+import { forwardBatch } from './bridge.js';
 
 // ─── Default Watchlist ───────────────────────────────────────────
 // High-liquidity stocks that are easy to trade
@@ -137,6 +138,9 @@ class OracleScanner {
         }
 
         console.log('\n' + '═'.repeat(60) + '\n');
+
+        // Forward signals to Wealth Engine backend
+        await forwardBatch(results);
 
         this.insider.close();
         this.congress.close();

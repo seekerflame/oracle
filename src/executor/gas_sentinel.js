@@ -10,7 +10,7 @@ import { ethers } from 'ethers';
 
 const RPC_CONFIG = {
     ARB: ['https://arb1.arbitrum.io/rpc', 'https://arbitrum.drpc.org'],
-    POL: ['https://polygon-rpc.com', 'https://polygon.drpc.org', 'https://1rpc.io/poly'],
+    POL: ['https://polygon.drpc.org', 'https://1rpc.io/poly'],
     BASE: ['https://mainnet.base.org']
 };
 
